@@ -1,6 +1,7 @@
 const { mode } = require("webpack-nano/argv");
 const { MiniHtmlWebpackPlugin } = require("mini-html-webpack-plugin");
 const { WebpackPluginServe } = require("webpack-plugin-serve");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   watch: mode === "development",
@@ -14,8 +15,16 @@ module.exports = {
       liveReload: true,
       waitForBuild: true,
     }),
+    new MiniCssExtractPlugin({ filename: "[name].css" }),
   ],
   module: {
-    rules: [{ test: /\.css$/, use: ["style-loader", "css-loader"] }],
+    rules: [
+      // { test: /\.css$/, use: ["style-loader", "css-loader"] },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        sideEffects: true,
+      },
+    ],
   },
 };
